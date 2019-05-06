@@ -1,0 +1,202 @@
+% Aquí comienza el préambulo
+\documentclass[letterpaper, 12pt]{article}
+
+% Soporte para acentos.
+\usepackage[utf8]{inputenc}
+
+%Español, división de sílabas
+\usepackage[spanish,mexico]{babel}
+%Numbers set
+\usepackage{amssymb}
+%Usar codificación T1
+\usepackage[T1]{fontenc}
+
+% Una forma de establecer los márgenes
+\topmargin = -2cm         % default 1 cm
+\oddsidemargin= 0cm       % default 2 cm
+\textheight = 23cm        % default 15 cm
+\textwidth = 17cm         % default 12 cm
+
+% Paquetes que usaremos.
+\usepackage{soul}
+\usepackage{enumerate}
+\usepackage{longtable} % Tablas grandes
+\usepackage{pdflscape} % Cambiar orientación de una parte del documento
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{tikz}
+\usepgflibrary{arrows}
+\usepackage{listings}
+
+\newtheorem{definicion}{Definición}
+\newtheorem{nota}{Nota}
+\newtheorem{teorema}{Teorema}
+\newtheorem{lema}{Lema}
+\newtheorem{observacion}{Observación}
+\newtheorem{demostracion}{Demostración}
+\newtheorem{corolario}{Corolario}
+\newtheorem{ejemplo}{Ejemplo}
+\newtheorem{ejemploH}{Ejemplo en Haskell}
+
+\lstdefinestyle{customc}{
+  belowcaptionskip=1\baselineskip,
+  breaklines=true,
+  frame=L,
+  xleftmargin=\parindent,
+  language=C,
+  showstringspaces=false,
+  basicstyle=\footnotesize\ttfamily,
+  keywordstyle=\bfseries\color{green!40!black},
+  commentstyle=\itshape\color{purple!40!black},
+  identifierstyle=\color{blue},
+  stringstyle=\color{orange},
+}
+
+% Titulo.
+\title{Computación Distribuida\\Facultad de ciencias\\ Universidad Nacional Autónoma de México\\ Guía para el primer parcial}
+% Nombre de los integrantes del equipo
+\author{Montoya Montes Pedro}
+\begin{document}
+\maketitle
+
+\tableofcontents
+\newpage
+
+\section{Preguntas}
+	\begin{enumerate}
+		\item Que es un estado, configuración, evento? 
+			\begin{enumerate}
+				\item Estado: Bloque de información minímo neesarios para un proceso.
+				\item Configuración: Estado de todos los procesos y todos los canales.
+				\item Evento: Momento del cambio del sistema o como $\vdash$ = <$P,S_{i},S_{f}, m_{s}, m_{z}$>, con P= identificador, S= estado inicial y final y m= mensaje recibido y enviado.
+			\end{enumerate}
+		\item Es posible definir una ejecución sólo con eventos? 
+			\\ No, necesitamos una forma en la cual saber el tiempo en la que ocurren dichas ejecuciones al mismo tiempo puede existir una configuración no accesible, la cual no está definida en una ejecución.
+		\item Que es un canal de comunicación? Que propiedades pueden tener canales?
+			\\ Es un método de difusión que se utiliza para enviar mensajes.
+			\\ Propiedades: Puede ser FIFO o RAND, puede tener perdida de mensaje, tiene asimetría (física o lógica) y tiene alteración de los paquetes.
+		\item Definir y explicar la causalidad de eventos.
+			\\ Es una representación de nuestros eventos en distintos procesos y como estos interactuan.
+		\item Dibujar y explicar la diagrama de ejecución.
+			\\ DIBUJO MAMAON AQUÍ
+		\item Definir y explicar que es una computación utilizando una gráfica de causalidad.
+			\\ Una computación es el conjunto de todas las ejecuciones equivalentes, se puede ver como la interacción de nuestros eventos en distintos procesos y como estos interactuan en un timepo lógico.
+		\item Definir dos tipos de aciertos (seguridad y viabilidad), proporcionar ejemplos.
+			\\Seguridad: Out$_{q,p}$[0,...,Sp$_{q}$-1]=In$_{q,p}$[0,...,Sp$_{q}$-1]
+			\\Viabilidad $\forall$ 0 $\leq$ k la configuración con k $\leq$ Sp y k $\leq$ Sq, es accesible.
+			\\XX
+		\item Que es un tiempo lógico, que problema resuelve?
+			\\Es una funcion que proyecta todos los eventos a un conjunto completo o parcialmente ordenado, no tener problemas con los eventos, asignando reglas para evitar desfaces.
+		\item Cual es la diferencia entre un reloj de Lamport y de Mattern?
+			\\ El reloj de Lamport es un conjunto ordenado mientras que Mattern es un conjunto semiordenado de ejecuciones.
+		\item Explicar en diagrama de eventos como se arreglan los eventos en el reloj de Lamport?
+			\\XX
+		\item Que es un corte local, y un corte consistente?
+			\\ Un corte local es un subconjunto de eventos de recibido y un corte consistente es un subconjunto de eventos Lq que cumple que para todo evento f menor que causalidad de evento entonces el evento f está en el corte Lq.
+		\item Que es un snapshot factible?
+			\\Es cuando S*p.rcvd$_{pq}$ $\subset$ S*p.sent$_{pq}$, es decir, cuando el estado de recibido y de enviado de un proceso, están dentro de la misma snapshot.
+		\item Que es un snapshot consistente?
+			\\Es aquel que tiene todos los eventos de envio y recibo de un proceso p dentro de la snapshot.
+		\item Algoritmo de Chandy-Lamport: formulacion, ventajas, desventajas.
+			\begin{lstlisting}
+bool taken = false;
+(evento externo){
+  saveLocalState();
+  taken=true;
+  for(Node q: neighbord s){
+    send(q, "snap");  
+  }
+}			
+(llega mensaje "snap"){
+  if(!taken){
+    saveLocalState();
+    taken=true;
+    for(Node q: neighbord s){
+      send(q, "snap");  
+    }      
+  }
+}
+			\end{lstlisting}
+Ventajas:
+\\ Puede ser iniciado por cualquier número de procesos al mismo tiempo y garantiza que todos los procesos van a participar en el snapshot.
+\\ Desventaja:
+\\ Requiere FIFO
+
+		\item Algoritmo de Lai-Yang: formulacion, ventajas, desventajas.
+			\begin{lstlisting}				
+bool taken = false;
+(evento provocado por algo){
+  taken = true;
+  saveLocalState();
+}
+(evento del algoritmo bajo consideracion){
+  send(<data>, taken);
+  ...
+}
+(evento del recibo del algorimto bajo consideracion){
+  (llego un mensaje del algoritmo){
+    if((mensaje.taken) && !taken){
+      saveLocalState();
+      taken = true;    
+    }  
+    ...
+  }
+}
+			\end{lstlisting}
+
+Ventajas:
+\\ No requiere FIFO y puede ser iniciado por cualquiera de los subconjuntos simultaneamente.
+\\Desventaja:
+\\No garantiza que todos los procesos participen en el snapshoot y aumenta el tamaño de todos los mensajes.
+		\item Comparar algoritmos de Chandy-Lamport y Lai-Yang.
+			\\ Chandy-Lamport solo funciona en FIFO y todos los eventos son tomados y Lai-Yang sirve en RAND y no todos los eventos son tomados.  
+		\item Como recuperar configuración completa en los algoritmos de Lai-Yang y Chandi-Lamport?
+		\\XX
+		\item Como entender que el periodo de toma de un snapshot es un proceso continuo?
+		\\XX
+		\item Explicar como dos procesos pueden bloquear uno a otro, ilustrar en un ejemplo de dos mutexes.
+			\\Si un proceso pide un recurso el cual tiene otro proceso, y al mismo tiempo este segundo proceso requiere del primero para conceder el recurso, se obtiene lo que se llama "deadlock".
+			\\Ejemplo: 
+			\begin{lstlisting}			
+Codigo P1		Codigo P2
+  loop{			loop{
+    mtx1.lock();	mtx2.lock(); 
+    mtx2.lock();	mtx1.lock();     
+    mtx2.unlock();	mtx1.unlock(); 
+    mtx1.unlock();	mtx2.unlock(); 
+  }			}
+			\end{lstlisting}
+		\item Modelo genérico de deadlock (explicar el algoritmo).
+		\\XX
+		\item Que es una propiedad estable - como refiere con un snapshot, como detectar?
+		\\ Una propiedad estable si en algún momento aparece en el sistema se queda hasta el infinito.
+		\item Algoritmo de Global Marking: su código y explicación de su funcionamiento?
+		\\XX
+		\item Como es posible a extender el algoritmo de Global Marking hasta un caso distribuido
+		\\XX
+		\item Que problemas pueden resolver protocolos de comunicación, que es un protocolo simetrico?
+		\\ Evitar perdida de información e intrución, un protocolo símetrico es aquel que envia la información en ambas direcciones de manera simultanea.
+		\item Protocolo de Sliding Window (SWP), regla central, formulación del protocolo.
+		\\XX
+		\item Explicar el caso limite de SWP, cuando la ventanilla se abre completamente.
+		\\XX
+		\item Como sumar las velocidades de varios ISPs para una conexión TCP entre dos oficinas (puede ser más de un proveedor de Internet en cada una de las oficinas) ?
+		\\XX		
+		\item Enrutamiento: grafo de comunicación y reenvío. Dificultades. Algoritmo básico.
+		\item Algoritmo de Floyd Warshall, idea de Toueg.
+		\\ Algoritmo para encontrar el camino minímo en gráficas dirigidas ponderadasl
+		\item Ventajas y desventajas de las sistemas p2p.
+		\\Ventaja: Permite el intercambio directo de información.
+		\\Desventaja: Se vuelve mas inestable mientras se tenga mas equipos conectados y la seguridad es pobre. 
+		\item Sistemas: Napster, Gnutella, Morpheus.
+		\\XX
+		\item Content addressable network (CAN), toros multidimensionales.
+		\item Distributed Hash Table (DHT), Chord y Kademlia, XOR.
+		\item Que es un mundo pequeño? Experimento de Milgram.
+		\item Modelo de Watts-Strogatz.
+		\item Comparar el problema la búsqueda descentralizada con el enrutamiento.
+		\item Modelo de Watts-Dodds-Newman: formulación, ventajas, relación con con el experimento de Milgram.
+		
+	\end{enumerate}
+\end{document} 
+

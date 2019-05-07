@@ -78,7 +78,7 @@
 		\item Definir y explicar la causalidad de eventos.
 			\\ Es una representación de nuestros eventos en distintos procesos y como estos interactuan.
 		\item Dibujar y explicar la diagrama de ejecución.
-			\\ DIBUJO MAMAON AQUÍ
+			\\ DIBUJO MAMALON AQUÍ
 		\item Definir y explicar que es una computación utilizando una gráfica de causalidad.
 			\\ Una computación es el conjunto de todas las ejecuciones equivalentes, se puede ver como la interacción de nuestros eventos en distintos procesos y como estos interactuan en un timepo lógico.
 		\item Definir dos tipos de aciertos (seguridad y viabilidad), proporcionar ejemplos.
@@ -183,17 +183,28 @@ Codigo P1		Codigo P2
 		\item Como sumar las velocidades de varios ISPs para una conexión TCP entre dos oficinas (puede ser más de un proveedor de Internet en cada una de las oficinas) ?
 		\\XX		
 		\item Enrutamiento: grafo de comunicación y reenvío. Dificultades. Algoritmo básico.
+		\\1NOTAS
 		\item Algoritmo de Floyd Warshall, idea de Toueg.
-		\\ Algoritmo para encontrar el camino minímo en gráficas dirigidas ponderadasl
+		\\ Algoritmo para encontrar el camino minímo en gráficas dirigidas ponderadas.
 		\item Ventajas y desventajas de las sistemas p2p.
 		\\Ventaja: Permite el intercambio directo de información.
 		\\Desventaja: Se vuelve mas inestable mientras se tenga mas equipos conectados y la seguridad es pobre. 
 		\item Sistemas: Napster, Gnutella, Morpheus.
-		\\XX
+		\\Napster: Centralizado, hay perdida facil de atacar, cuando cambia de dirección los usuarios no lo notan, hay trafico.
+		\\Gnutella: Descentralizado, los nodos desconocen lo que se almacena y pide, generan una propagación de busqueda y es ineficiente.
+		\\Morpheus: Descentralizado, hay trafico, de informaciónene dos niveles, uno de cliente otro de servidor.
 		\item Content addressable network (CAN), toros multidimensionales.
+		\\Sistema p2p que provee funcionalidades de tabla hash distribuida, permite realizar búsquedas eficientes, hay organización en la información similar.
 		\item Distributed Hash Table (DHT), Chord y Kademlia, XOR.
+		\\DHT: Almacena pares (clave, valor) y permiten consultar el valor asociado a una clave, los datos se almacenan de forma distribuida en una serie de nodos.
+		\\Chord: Esquema descentralizado, balanceado usa una función de hashing consistente para asignar claves a los nodos, para que el impacto de E-S sea mínima.
+		\\Kademlia: Implementada en los sistemas de intercambio de archivos y sigue la misma táctica de Chord.
+		\\XOR: Asegura que todas las rutas que van hacia cierto punto del sismtea terminan convergiendo.
 		\item Que es un mundo pequeño? Experimento de Milgram.
+		\\Es la gráfica de comunicación que tiene las siguientes propiedades.
+		\\Está definida una metrica y es la ruta mas corta entre todo par de nodo u,v $\in$ P crece como lnN, con N=|P|. 
 		\item Modelo de Watts-Strogatz.
+		\\Se emplea para la construcción... 
 		\item Comparar el problema la búsqueda descentralizada con el enrutamiento.
 		\item Modelo de Watts-Dodds-Newman: formulación, ventajas, relación con con el experimento de Milgram.
 		
